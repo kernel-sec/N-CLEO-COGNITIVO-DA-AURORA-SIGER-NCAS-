@@ -1,0 +1,118 @@
+{
+  "modulos": [
+    {
+      "id": "MOD-01",
+      "nome": "Suporte de Vida",
+      "status": "ativo",
+      "criticidade": "alta",
+      "ultima_manutencao": "2026-08-14"
+    },
+    {
+      "id": "MOD-02",
+      "nome": "Geracao de Energia",
+      "status": "ativo",
+      "criticidade": "alta",
+      "ultima_manutencao": "2026-07-30"
+    },
+    {
+      "id": "MOD-03",
+      "nome": "Purificacao de Agua",
+      "status": "manutencao",
+      "criticidade": "media",
+      "ultima_manutencao": "2026-09-01"
+    },
+    {
+      "id": "MOD-04",
+      "nome": "Comunicacoes Externas",
+      "status": "inativo",
+      "criticidade": "media",
+      "ultima_manutencao": "2026-06-12"
+    },
+    {
+      "id": "MOD-05",
+      "nome": "Cultivo Hidroponico",
+      "status": "ativo",
+      "criticidade": "baixa",
+      "ultima_manutencao": "2026-08-28"
+    }
+  ],
+  "alertas": [
+    {
+      "id": "ALT-001",
+      "modulo": "Purificacao de Agua",
+      "tipo_ocorrencia": "consumo elevado",
+      "prioridade": "media",
+      "data": "2026-09-01",
+      "critico": false,
+      "mensagem": "Consumo de energia do modulo acima do esperado durante o ciclo noturno."
+    },
+    {
+      "id": "ALT-002",
+      "modulo": "Comunicacoes Externas",
+      "tipo_ocorrencia": "falha de conexao",
+      "prioridade": "alta",
+      "data": "2026-09-05",
+      "critico": true,
+      "mensagem": "Perda total de sinal com a estacao orbital ha mais de 6 horas."
+    },
+    {
+      "id": "ALT-003",
+      "modulo": "Suporte de Vida",
+      "tipo_ocorrencia": "sensor instavel",
+      "prioridade": "alta",
+      "data": "2026-09-07",
+      "critico": true,
+      "mensagem": "Leitura de oxigenio do setor B oscilando fora da faixa normal."
+    }
+  ],
+  "interacoes": [
+    {
+      "id": "INT-001",
+      "usuario": "Tripulante Souza",
+      "pergunta": "Qual o status do modulo de purificacao de agua?",
+      "resposta": "O modulo de Purificacao de Agua esta em manutencao desde 01/09/2026.",
+      "tipo_prompt": "zero-shot",
+      "data": "2026-09-01"
+    },
+    {
+      "id": "INT-002",
+      "usuario": "Tripulante Lima",
+      "pergunta": "Classifique como urgente ou normal: preciso de uma peca de reposicao para o filtro de ar amanha.",
+      "resposta": "Classificacao: NORMAL",
+      "tipo_prompt": "few-shot",
+      "data": "2026-09-04"
+    }
+  ],
+  "prompts": [
+    {
+      "id": "PROMPT-ZS-01",
+      "tecnica": "zero-shot",
+      "objetivo": "Resumir um alerta operacional",
+      "template": "Resuma em ate duas frases o seguinte alerta operacional, destacando o modulo afetado e o nivel de risco: {alerta}"
+    },
+    {
+      "id": "PROMPT-FS-01",
+      "tecnica": "few-shot",
+      "objetivo": "Classificar uma solicitacao da tripulacao como URGENTE ou NORMAL",
+      "template": "Classifique a solicitacao como URGENTE ou NORMAL.\n\nExemplo 1: 'O modulo de suporte de vida esta com falha critica.' -> URGENTE\nExemplo 2: 'Gostaria de solicitar mais horas de treino na academia.' -> NORMAL\nExemplo 3: 'Perdemos contato com a base ha 3 horas.' -> URGENTE\n\nSolicitacao: '{solicitacao}' ->"
+    },
+    {
+      "id": "PROMPT-CoT-01",
+      "tecnica": "chain-of-thought",
+      "objetivo": "Explicar passo a passo se uma operacao deve ser bloqueada",
+      "template": "Analise passo a passo se a operacao deve ser bloqueada. Considere: (1) houve falha de seguranca? (2) houve inconsistencia nos dados? (3) aplique a regra logica e explique a conclusao. Dados: {dados}"
+    },
+    {
+      "id": "PROMPT-SO-01",
+      "tecnica": "structured-output",
+      "objetivo": "Gerar uma saida estruturada em JSON para um registro tecnico",
+      "template": "Converta o registro tecnico abaixo em um objeto JSON com os campos 'modulo', 'status', 'prioridade' e 'resumo'. Responda APENAS com o JSON, sem texto adicional. Registro: {registro}"
+    },
+    {
+      "id": "PROMPT-CTRL-01",
+      "tecnica": "structured-output",
+      "objetivo": "Gerar resposta padronizada ao centro de controle a partir de um alerta critico",
+      "template": "Gere uma mensagem padronizada para o centro de controle com base no alerta abaixo. Responda em ate 3 linhas, no formato: MODULO / NIVEL_CRITICIDADE / ACAO_RECOMENDADA. Alerta: {alerta}"
+    }
+  ]
+}
